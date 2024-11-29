@@ -104,7 +104,7 @@ class MultiAgentPathfinding:
                    color='gray', marker='s', s=marker_size)
         
         # Plot paths
-        colors = ['blue', 'red']
+        colors = ['blue', 'red', 'green', 'purple']
         for i, path in enumerate(paths):
             path_array = np.array(path)
             plt.plot(path_array[:, 1], path_array[:, 0], 
@@ -146,9 +146,9 @@ obstacles = extract_obstacles(grid)
 
 pathfinder = MultiAgentPathfinding(grid)
 
-# Define start and goal positions for both agents
-starts = [(0, 0), (0, 9)]
-goals = [(80, 80), (80, 80)]
+# Define start and goal positions for four agents
+starts = [(0, 0), (0, 3), (0, 5), (0, 7)]
+goals = [(80, 80), (76, 80), (72, 80), (68, 80)]
 
 # Find paths
 paths = pathfinder.find_paths_for_agents(starts, goals)
@@ -169,9 +169,11 @@ output_data = {
 }
 
 for i, path in enumerate(paths):
+    # Invert x and y coordinates of the path
+    #inverted_path = [[pos[1], pos[0]] for pos in path]
     agent_data = {
         "id": i + 1,
-        "initial_position": starts[i],
+        "initial_position": [starts[i][1], starts[i][0]],  # Invert initial position
         "path": path
     }
     output_data["LGVs"].append(agent_data)

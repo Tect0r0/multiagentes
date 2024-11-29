@@ -1,6 +1,7 @@
 import numpy as np
 import heapq
 import matplotlib.pyplot as plt
+import json
 
 class Node:
     def __init__(self, pos, g_cost, h_cost, parent=None, time_step=0):
@@ -119,7 +120,6 @@ class MultiAgentPathfinding:
         plt.legend()
         plt.xlim(-1, self.grid_size + 40)
         plt.ylim(-1, self.grid_size)
-        plt.gca().invert_yaxis()  # Invert y-axis to match grid coordinates
         plt.show()
 
 # Read grid from map.txt
@@ -128,7 +128,8 @@ def read_grid_from_file(filename):
         grid = []
         for line in file:
             grid.append([int(x) for x in line.strip()])
-    return np.array(grid)
+    grid = np.array(grid)
+    return np.flipud(grid)  # Reverse the grid on its x-axis (flip vertically)
 
 # Extract obstacle coordinates from the grid
 def extract_obstacles(grid):
@@ -147,10 +148,37 @@ pathfinder = MultiAgentPathfinding(grid)
 
 # Define start and goal positions for both agents
 starts = [(0, 0), (0, 9)]
-goals = [(80, 80), (9, 0)]
+goals = [(80, 80), (80, 80)]
 
 # Find paths
 paths = pathfinder.find_paths_for_agents(starts, goals)
+
+# Variables
+k = 50
+n = 3
+T = 100
+b = 2
+
+# Generate JSON output
+output_data = {
+    "k": k,
+    "n": n,
+    "T": T,
+    "b": b,
+    "LGVs": []
+}
+
+for i, path in enumerate(paths):
+    agent_data = {
+        "id": i + 1,
+        "initial_position": starts[i],
+        "path": path
+    }
+    output_data["LGVs"].append(agent_data)
+
+# Write JSON to file
+with open('simulation_output.json', 'w') as json_file:
+    json.dump(output_data, json_file, indent=4)
 
 # Visualize
 if all(paths):

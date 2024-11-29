@@ -147,7 +147,7 @@ pathfinder = MultiAgentPathfinding(grid)
 
 # Define start and goal positions for both agents
 starts = [(0, 0), (0, 9)]
-goals = [(9, 9), (9, 0)]
+goals = [(80, 80), (9, 0)]
 
 # Find paths
 paths = pathfinder.find_paths_for_agents(starts, goals)
